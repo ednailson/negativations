@@ -92,5 +92,8 @@ RETURN NEW
 	bindVars["@collection"] = d.coll.Name()
 	bindVars["negativation"] = negativations
 	_, err := d.db.Query(nil, query, bindVars)
-	return err
+	if err != nil {
+		return ErrSaveDocuments
+	}
+	return nil
 }
