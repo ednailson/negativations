@@ -11,3 +11,15 @@ type Negativation struct {
 	DebtDate         time.Time `json:"debtDate"`
 	InclusionDate    time.Time `json:"inclusionDate"`
 }
+
+func CreateNegativation(companyDocument, companyName, customerDocument string, value float64, contract string, debtDate, inclusionDate time.Time) *Negativation {
+	return &Negativation{
+		CompanyDocument:  companyDocument,
+		CompanyName:      companyName,
+		CustomerDocument: customerDocument,
+		Value:            value,
+		Contract:         contract,
+		DebtDate:         debtDate,
+		InclusionDate:    inclusionDate,
+	}
+}
