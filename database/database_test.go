@@ -49,16 +49,24 @@ func TestDatabase(t *testing.T) {
 		g.Expect(negativation[0]).Should(BeEquivalentTo(fakeNegativation()))
 	})
 	t.Run("save a negativation", func(t *testing.T) {
-		coll := MockAndTruncateCollection(g, DBCollTest)
+		client := MockClient(g)
+		db, err := client.Database(nil, DBNameTest)
+		g.Expect(err).ShouldNot(HaveOccurred())
+		coll, err := db.Collection(nil, DBCollTest)
+		g.Expect(err).ShouldNot(HaveOccurred())
+		coll.Truncate(nil)
 		sut, err := NewDatabase(FakeDbConfig())
 		g.Expect(err).ShouldNot(HaveOccurred())
 
-		key, err := sut.Save(fakeNegativation())
+		err = sut.Save([]domain.Negativation{fakeNegativation()})
 
 		g.Expect(err).ShouldNot(HaveOccurred())
-		var negativation domain.Negativation
-		_, err = coll.ReadDocument(nil, key, &negativation)
+		cursor, err := db.Query(nil, "FOR n IN @@collection FILTER n.contract == @contract RETURN n", map[string]interface{}{"@collection": DBCollTest, "contract": fakeNegativation().Contract})
 		g.Expect(err).ShouldNot(HaveOccurred())
+		var negativation domain.Negativation
+		_, err = cursor.ReadDocument(nil, &negativation)
+		g.Expect(err).ShouldNot(HaveOccurred())
+		g.Expect(cursor.HasMore()).Should(BeFalse())
 		g.Expect(negativation).Should(BeEquivalentTo(fakeNegativation()))
 	})
 }

@@ -81,10 +81,16 @@ func (d *dbDriver) ReadByDocument(document string) ([]domain.Negativation, error
 	return negativations, nil
 }
 
-func (d *dbDriver) Save(negativation domain.Negativation) (string, error) {
-	document, err := d.coll.CreateDocument(nil, negativation)
-	if err != nil {
-		return "", ErrSaveDocument
-	}
-	return document.Key, nil
+func (d *dbDriver) Save(negativations []domain.Negativation) error {
+	query :=
+		`FOR n IN @negativation UPSERT { contract: n.contract }
+INSERT n
+UPDATE n IN @@collection
+RETURN NEW
+`
+	var bindVars = make(map[string]interface{})
+	bindVars["@collection"] = d.coll.Name()
+	bindVars["negativation"] = negativations
+	_, err := d.db.Query(nil, query, bindVars)
+	return err
 }
