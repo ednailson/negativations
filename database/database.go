@@ -60,7 +60,7 @@ func NewDatabase(config Config) (Database, error) {
 	}, nil
 }
 
-func (d *dbDriver) ReadByDocument(document string) (*domain.Negativation, error) {
+func (d *dbDriver) ReadByDocument(document string) ([]domain.Negativation, error) {
 	query := `FOR n IN @@collection FILTER n.customerDocument == @document RETURN n`
 	var bindVars = make(map[string]interface{})
 	bindVars["@collection"] = d.coll.Name()
@@ -69,12 +69,16 @@ func (d *dbDriver) ReadByDocument(document string) (*domain.Negativation, error)
 	if err != nil {
 		return nil, ErrReadByDocument
 	}
-	var negativation domain.Negativation
-	_, err = cursor.ReadDocument(nil, &negativation)
-	if err != nil {
-		return nil, ErrReadResult
+	var negativations []domain.Negativation
+	for cursor.HasMore() {
+		var negativation domain.Negativation
+		_, err = cursor.ReadDocument(nil, &negativation)
+		if err != nil {
+			return nil, ErrReadResult
+		}
+		negativations = append(negativations, negativation)
 	}
-	return &negativation, nil
+	return negativations, nil
 }
 
 func (d *dbDriver) Save(negativation domain.Negativation) (string, error) {

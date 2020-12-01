@@ -45,7 +45,8 @@ func TestDatabase(t *testing.T) {
 		negativation, err := sut.ReadByDocument(fakeNegativation().CustomerDocument)
 
 		g.Expect(err).ShouldNot(HaveOccurred())
-		g.Expect(*negativation).Should(BeEquivalentTo(fakeNegativation()))
+		g.Expect(len(negativation)).Should(BeEquivalentTo(1))
+		g.Expect(negativation[0]).Should(BeEquivalentTo(fakeNegativation()))
 	})
 	t.Run("save a negativation", func(t *testing.T) {
 		coll := MockAndTruncateCollection(g, DBCollTest)
