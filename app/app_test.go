@@ -42,6 +42,8 @@ func TestApp(t *testing.T) {
 
 func fakeConfig(host string) Config {
 	return Config{
+		Key:          Key,
+		Nonce:        Nonce,
 		MainframeUrl: host,
 		Port:         5000,
 		Database: database.Config{

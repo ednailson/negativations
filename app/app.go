@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/ednailson/httping-go"
 	"github.com/ednailson/serasa-challenge/controller"
+	"github.com/ednailson/serasa-challenge/controller/crypto"
 	"github.com/ednailson/serasa-challenge/database"
 	"net/http"
 )
@@ -17,7 +18,11 @@ func LoadApp(cfg Config) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	ctrl := controller.NewController(cfg.MainframeUrl, db)
+	cryptoModule, err := crypto.NewCrypto(cfg.Key, cfg.Nonce)
+	if err != nil {
+		return nil, err
+	}
+	ctrl := controller.NewController(cfg.MainframeUrl, db, cryptoModule)
 	server := httping.NewHttpServer("", cfg.Port)
 	loadRoutes(ctrl, server)
 	return &App{

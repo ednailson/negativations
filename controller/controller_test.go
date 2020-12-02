@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/ednailson/serasa-challenge/controller/crypto"
 	"github.com/ednailson/serasa-challenge/database"
 	. "github.com/ednailson/serasa-challenge/helper_tests"
 	. "github.com/onsi/gomega"
@@ -13,8 +14,10 @@ func TestController(t *testing.T) {
 	g.Expect(err).ShouldNot(HaveOccurred())
 	negativationsServer := MockNegativationMainframeServer(g)
 	defer negativationsServer.Close()
+	cryptoModule, err := crypto.NewCrypto(Key, Nonce)
+	g.Expect(err).ShouldNot(HaveOccurred())
 
-	ctrl := NewController(negativationsServer.URL, db)
+	ctrl := NewController(negativationsServer.URL, db, cryptoModule)
 
 	t.Run("update data", func(t *testing.T) {
 		client := MockClient(g)
@@ -35,14 +38,18 @@ func TestController(t *testing.T) {
 	t.Run("read a document by document", func(t *testing.T) {
 		coll := MockAndTruncateCollection(g, DBCollTest)
 		negativation := FakeNegativations()[0]
+		negativation.Contract = cryptoModule.Encrypt(negativation.Contract)
+		negativation.CustomerDocument = cryptoModule.Encrypt(negativation.CustomerDocument)
+		negativation.CompanyDocument = cryptoModule.Encrypt(negativation.CompanyDocument)
+		negativation.CompanyName = cryptoModule.Encrypt(negativation.CompanyName)
 		_, err := coll.CreateDocument(nil, negativation)
 		g.Expect(err).ShouldNot(HaveOccurred())
 
-		assert, err := ctrl.NegativationByDocument(negativation.CustomerDocument)
+		assert, err := ctrl.NegativationByDocument(FakeNegativations()[0].CustomerDocument)
 
 		g.Expect(err).ShouldNot(HaveOccurred())
 		g.Expect(len(assert)).Should(BeEquivalentTo(1))
-		g.Expect(assert[0]).Should(BeEquivalentTo(negativation))
+		g.Expect(assert[0]).Should(BeEquivalentTo(FakeNegativations()[0]))
 	})
 }
 
