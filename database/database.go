@@ -78,6 +78,9 @@ func (d *dbDriver) ReadByDocument(document string) ([]domain.Negativation, error
 		}
 		negativations = append(negativations, negativation)
 	}
+	if len(negativations) == 0 {
+		return nil, ErrDocumentNotFound
+	}
 	return negativations, nil
 }
 
