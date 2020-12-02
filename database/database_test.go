@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/ednailson/serasa-challenge/domain"
+	. "github.com/ednailson/serasa-challenge/helper_tests"
 	. "github.com/onsi/gomega"
 	"testing"
 	"time"

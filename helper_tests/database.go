@@ -1,4 +1,4 @@
-package database
+package helper_tests
 
 import (
 	"crypto/tls"
