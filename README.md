@@ -12,8 +12,8 @@ Para iniciar o projeto basta executar o comando a seguir na raiz do projeto
 
     make init
 
-Obs: a porta que será ocupada pelo serviço é a `5000`. Certifique-se que essa
-porta não esteja ocupada na sua máquina!
+Obs: as portas que serão ocupadas pelos serviços são as `5000` e `8529`. Certifique-se que essas
+portas não estejam ocupadas na sua máquina!
 
 ## Endpoints
 
