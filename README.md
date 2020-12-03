@@ -17,6 +17,9 @@ porta não esteja ocupada na sua máquina!
 
 ## Endpoints
 
+Como requisitado, há dois endpoints, um para ocorrer a sicronização dos dados com o mainframe e outro
+para realizar a leitura de negativações a partir de um CPF
+
 ### Atualize informações do mainframe
 
 Endpoint para realizar o processo de sicronismo do serviço com o mainframe.
