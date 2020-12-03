@@ -33,6 +33,9 @@ func (c *Controller) UpdateData() error {
 func (c *Controller) NegativationByDocument(document string) ([]domain.Negativation, error) {
 	negativations, err := c.db.ReadByDocument(c.cryptoModule.Encrypt(document))
 	if err != nil {
+		if err == database.ErrDocumentNotFound {
+			return []domain.Negativation{}, nil
+		}
 		return nil, err
 	}
 	return c.decryptNegativations(negativations)
