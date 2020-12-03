@@ -15,6 +15,8 @@ Para iniciar o projeto basta executar o comando a seguir na raiz do projeto
 Obs: as portas que serão ocupadas pelos serviços são as `5000` e `8529`. Certifique-se que essas
 portas não estejam ocupadas na sua máquina!
 
+**O serviço de façade estará disponível na porta 5000**
+
 ## Endpoints
 
 Como requisitado, há dois endpoints, um para ocorrer a sicronização dos dados com o mainframe e outro
