@@ -23,3 +23,7 @@ tests: ## Run project tests
 	mkdir -p ./test/cover
 	go test -race -coverpkg= ./... -coverprofile=./test/cover/cover.out
 	go tool cover -html=./test/cover/cover.out -o ./test/cover/cover.html
+
+init: ## Inits project
+	docker-compose up -d --build
+	docker-compose logs -f --tail="100"
