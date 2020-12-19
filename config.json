@@ -1,0 +1,14 @@
+{
+  "key": "keyTesting123456",
+  "nonce": "nonceTesting",
+  "mainframe_url": "http://mainframe.service.com.br:3000/negativations",
+  "port": 5000,
+  "database": {
+    "collection": "negativations",
+    "host": "http://arangodb.service.com.br",
+    "port": 8529,
+    "user": "root",
+    "password": "dummyPass",
+    "database": "serasa-challenge"
+  }
+}
